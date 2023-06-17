@@ -38,8 +38,40 @@ func TestGradeYear(t *testing.T) {
 		}
 
 	})
-	t.Run("Grade students no errors", func(t *testing.T) {
+	t.Run("Grade students student not found error", func(t *testing.T) {
+		testYear := uint8(1)
 
+		mockRepository := mocks.NewRepository(t)
+		mockStudent := mocks.NewStudent(t)
+
+		namesList := []string{"test"}
+		mockRepository.On("List", testYear).Return(namesList, nil)
+		studentNotFoundError := academy.ErrStudentNotFound
+		mockRepository.On("Get", "test").Return(mockStudent, studentNotFoundError)
+
+		err := academy.GradeYear(mockRepository, testYear)
+		if err != nil {
+			t.Errorf("Expected no error but received: %v", err)
+		}
+	})
+	t.Run("Grade students no errors", func(t *testing.T) {
+		testYear := uint8(1)
+
+		mockRepository := mocks.NewRepository(t)
+		mockStudent := mocks.NewStudent(t)
+
+		namesList := []string{"test"}
+		mockRepository.On("List", testYear).Return(namesList, nil)
+		mockRepository.On("Get", "test").Return(mockStudent, nil)
+		mockRepository.On("Save", "test", uint8(2)).Return(nil)
+		mockStudent.On("FinalGrade").Return(3)
+		mockStudent.On("Name").Return("test")
+		mockStudent.On("Year").Return(uint8(1))
+
+		err := academy.GradeYear(mockRepository, testYear)
+		if err != nil {
+			t.Errorf("Expected no error but received: %v", err)
+		}
 	})
 }
 
