@@ -46,7 +46,7 @@ func TestAdd(t *testing.T) {
 }
 
 func TestMoveTo(t *testing.T) {
-	testsName := "Ship's points should be displaced by the difference between it's first coordinate and the destination"
+	testsName := "Ship's points should be displaced by the difference between the destination point and ship's first coordinate"
 	testCases := []struct {
 		receiver ships.Ship
 		moveTo   ships.Point
